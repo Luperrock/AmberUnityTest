@@ -17,9 +17,27 @@ using UnityEngine;
 using CodeMonkey.Utils;
 using Random = UnityEngine.Random;
 
-public class Grid {
 
-    public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
+// 0 Empty
+// 1 Obstacle
+// 2 Player
+// 3 Possible selection
+
+public class Grid
+{
+    private List<Vector2Int> potentialPositionsForEntity = new List<Vector2Int>()
+    {
+        new Vector2Int(-1,-1),
+        new Vector2Int(-1,0),
+        new Vector2Int(-1,1),
+        new Vector2Int(0,-1),
+        new Vector2Int(0,1),
+        new Vector2Int(1,-1),
+        new Vector2Int(1,0),
+        new Vector2Int(1,1),
+    };
+
+public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
     public class OnGridValueChangedEventArgs : EventArgs {
         public int x;
         public int y;
@@ -76,13 +94,15 @@ public class Grid {
         }
     }
 
+    // =================================================================================================================
     public void GetNextMove( out int outX, out int outY)
     {
         // Sample code, change me!
         outX = playerX + 1;
         outY = playerY + 1;
     }
-
+    // =================================================================================================================
+    
     public void SetPlayerPosition(int inX, int inY)
     {
         SetValue(inX, inY, 2);
@@ -162,6 +182,11 @@ public class Grid {
         } else {
             return 0;
         }
+    }
+    
+    public bool IsObstacle(int x, int y)
+    {
+        return GetValue(x, y) == 1;
     }
 
     public int GetValue(Vector3 worldPosition) {

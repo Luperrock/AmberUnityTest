@@ -98,8 +98,38 @@ public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
     public void GetNextMove( out int outX, out int outY)
     {
         // Sample code, change me!
-        outX = playerX + 1;
-        outY = playerY + 1;
+        // y: -1 down, 1 up
+        // x: 1 right, -1 left, 0 keep
+        var temporalPOsitions = new List<Vector2Int>(potentialPositionsForEntity);
+        var newPos = GetRandomValidPos(temporalPOsitions);
+
+        outX = newPos.x;
+        outY = newPos.y;
+
+        //IsObstacle()
+        
+    }
+
+    private Vector2Int GetRandomValidPos(List<Vector2Int> temporalPositions)
+    {
+        if (temporalPositions.Count <= 0) return new Vector2Int(playerX, playerY);
+
+
+        var random = Random.Range(0, temporalPositions.Count - 1);
+        var newPos = temporalPositions[random];
+
+        int x= playerX + newPos.x;
+        int y = playerY + newPos.y;
+
+        var validPos = GetValidPos(x, y);
+
+        if (validPos != 0)
+        {
+            temporalPositions.Remove(newPos);
+            return GetRandomValidPos(temporalPositions);
+        }
+
+        return new Vector2Int(x, y);    
     }
     // =================================================================================================================
     
@@ -174,6 +204,18 @@ public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
         int x, y;
         GetXY(worldPosition, out x, out y);
         SetValue(x, y, value);
+    }
+
+    public int GetValidPos(int x, int y)
+    {
+        if (x >= 0 && y >= 0 && x < width && y < height)
+        {
+            return gridArray[x, y];
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     public int GetValue(int x, int y) {

@@ -44,6 +44,8 @@ public class Testing : MonoBehaviour {
                 int gridValue = grid.GetValue(MousePosition);
                 if (gridValue == 0)
                 {
+                    isMovePending = false;
+                    grid.ClearBoard();
                     int x, y;
                     grid.GetXY(MousePosition, out x, out y);
                     grid.SetPlayerPosition(x,y);

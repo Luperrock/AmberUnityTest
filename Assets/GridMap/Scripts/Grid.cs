@@ -123,8 +123,11 @@ public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
     public void MovePlayer()
     {
         // Clear previous 
-        SetValue(playerX, playerY, 0);
-        SetPlayerPosition(pendingX, pendingY);
+        if (pendingX >= 0 && pendingY >= 0 && pendingX < width && pendingY < height)
+        {
+            SetValue(playerX, playerY, 0);
+            SetPlayerPosition(pendingX, pendingY);
+        }
     }
     
     public void ClearBoard()
